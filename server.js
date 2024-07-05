@@ -14,7 +14,7 @@ let teaCount = 0;
 let coffeeCount = 0;
 const userVotes = {};  // Stores user votes
 
-const mongoUrl = 'mongodb+srv://naitik554:naitik@554@chai-counter-cluster.kbijyv9.mongodb.net/?retryWrites=true&w=majority&appName=chai-counter-cluster';
+const mongoUrl = 'mongodb+srv://naitikprajapati554:8o3sFgw2mRVw5aNM@cluster0.tifjckw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(session({
