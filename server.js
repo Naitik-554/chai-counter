@@ -5,6 +5,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const { v4: uuidv4 } = require('uuid');
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -14,12 +15,12 @@ let teaCount = 0;
 let coffeeCount = 0;
 const userVotes = {};  // Stores user votes
 
-const mongoUrl = 'mongodb+srv://naitikprajapati554:8o3sFgw2mRVw5aNM@cluster0.tifjckw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const mongoUrl = process.env.MONGO_URL;
 const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(session({
     genid: () => uuidv4(),
-    secret: 'secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ client })
