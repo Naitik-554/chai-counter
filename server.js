@@ -35,8 +35,8 @@ wss.on('connection', (ws, req) => {
         userVotes[userId] = null;  // No vote initially
     }
 
-    // Send the current counts and user vote to the new client
-    ws.send(JSON.stringify({ teaCount, coffeeCount, userVote: userVotes[userId] }));
+    // Send the current counts to the new client
+    ws.send(JSON.stringify({ teaCount, coffeeCount }));
 
     ws.on('message', message => {
         const data = JSON.parse(message);
@@ -57,12 +57,15 @@ wss.on('connection', (ws, req) => {
             }
             userVotes[userId] = data.item;
 
-            // Broadcast the updated counts and user vote to all clients
+            // Broadcast the updated counts to all clients
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: userVotes[userId] }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount }));
                 }
             });
+
+            // Send the user vote to the specific client
+            ws.send(JSON.stringify({ userVote: userVotes[userId] }));
         } else if (data.type === 'reset') {
             teaCount = 0;
             coffeeCount = 0;
@@ -71,7 +74,7 @@ wss.on('connection', (ws, req) => {
             });
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: null }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount }));
                 }
             });
         }

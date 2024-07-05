@@ -4,8 +4,10 @@ let userVote = null;
 
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    document.getElementById('tea-count').innerText = data.teaCount;
-    document.getElementById('coffee-count').innerText = data.coffeeCount;
+    if (data.teaCount !== undefined && data.coffeeCount !== undefined) {
+        document.getElementById('tea-count').innerText = data.teaCount;
+        document.getElementById('coffee-count').innerText = data.coffeeCount;
+    }
     if (data.userVote !== undefined) {
         userVote = data.userVote;
         updateButtons();
