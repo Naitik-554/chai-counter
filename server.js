@@ -2,7 +2,9 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const { v4: uuidv4 } = require('uuid');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,11 +14,15 @@ let teaCount = 0;
 let coffeeCount = 0;
 const userVotes = {};  // Stores user votes
 
+const mongoUrl = 'mongodb+srv://naitik554:sEifz7afkRMCjyRc@chai-counter.dkusygf.mongodb.net/?retryWrites=true&w=majority&appName=chai-counter';
+const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
 app.use(session({
     genid: () => uuidv4(),
     secret: 'secret-key',
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ client })
 }));
 
 app.use(express.static('public'));
