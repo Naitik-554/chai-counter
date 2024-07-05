@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea and Coffee Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tea and Coffee Counter</h1>
+        <div class="counter">
+            <div class="item">
+                <h2>Tea</h2>
+                <p id="tea-count">0</p>
+                <button id="tea-button" onclick="increment('tea')">Add Tea</button>
+            </div>
+            <div class="item">
+                <h2>Coffee</h2>
+                <p id="coffee-count">0</p>
+                <button id="coffee-button" onclick="increment('coffee')">Add Coffee</button>
+            </div>
+        </div>
+        <button class="reset" onclick="resetCounts()">Reset</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
