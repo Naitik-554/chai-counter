@@ -8,8 +8,8 @@ ws.onmessage = (event) => {
         document.getElementById('tea-count').innerText = data.teaCount;
         document.getElementById('coffee-count').innerText = data.coffeeCount;
     }
-    if (data.userVote !== undefined) {
-        userVote = data.userVote;
+    if (data.userVotes !== undefined) {
+        userVote = data.userVotes[ws.url] || null; // Update userVote based on current user's vote
         updateButtons();
     }
 };

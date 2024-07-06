@@ -60,10 +60,10 @@ wss.on('connection', (ws, req) => {
             }
             userVotes[userId] = data.item;
 
-            // Broadcast the updated counts and user vote to all clients
+            // Broadcast the updated counts and user votes to all clients
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: userVotes[userId] }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount, userVotes }));
                 }
             });
         } else if (data.type === 'reset') {
@@ -74,7 +74,7 @@ wss.on('connection', (ws, req) => {
             });
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: null }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount, userVotes }));
                 }
             });
         }
