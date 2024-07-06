@@ -8,8 +8,8 @@ ws.onmessage = (event) => {
         document.getElementById('tea-count').innerText = data.teaCount;
         document.getElementById('coffee-count').innerText = data.coffeeCount;
     }
-    if (data.userVotes !== undefined) {
-        userVote = data.userVotes[ws.url] || null; // Update userVote based on current user's vote
+    if (data.userVote !== undefined) {
+        userVote = data.userVote;
         updateButtons();
     }
 };
@@ -25,10 +25,21 @@ function resetCounts() {
 }
 
 function updateButtons() {
-    document.getElementById('tea-button').disabled = (userVote === 'tea');
-    document.getElementById('coffee-button').disabled = (userVote === 'coffee');
-    if (userVote === null) {
-        document.getElementById('tea-button').disabled = false;
-        document.getElementById('coffee-button').disabled = false;
+    const teaButton = document.getElementById('tea-button');
+    const coffeeButton = document.getElementById('coffee-button');
+
+    teaButton.disabled = (userVote === 'tea');
+    coffeeButton.disabled = (userVote === 'coffee');
+
+    teaButton.classList.remove('selected');
+    coffeeButton.classList.remove('selected');
+
+    if (userVote === 'tea') {
+        teaButton.classList.add('selected');
+    } else if (userVote === 'coffee') {
+        coffeeButton.classList.add('selected');
+    } else {
+        teaButton.disabled = false;
+        coffeeButton.disabled = false;
     }
 }
