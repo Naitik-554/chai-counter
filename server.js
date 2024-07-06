@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -5,7 +6,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const { v4: uuidv4 } = require('uuid');
 const { MongoClient } = require('mongodb');
-require('dotenv').config();
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -16,11 +17,16 @@ let coffeeCount = 0;
 const userVotes = {};  // Stores user votes
 
 const mongoUrl = process.env.MONGO_URL;
+const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(64).toString('hex');  // Use generated secret if not set
+
+console.log('MONGO_URL:', mongoUrl);  // Debugging line
+console.log('SESSION_SECRET:', sessionSecret);  // Debugging line
+
 const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(session({
     genid: () => uuidv4(),
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ client })
