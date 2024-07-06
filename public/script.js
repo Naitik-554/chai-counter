@@ -27,4 +27,8 @@ function resetCounts() {
 function updateButtons() {
     document.getElementById('tea-button').disabled = (userVote === 'tea');
     document.getElementById('coffee-button').disabled = (userVote === 'coffee');
+    if (userVote === null) {
+        document.getElementById('tea-button').disabled = false;
+        document.getElementById('coffee-button').disabled = false;
+    }
 }

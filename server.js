@@ -19,9 +19,6 @@ const userVotes = {};  // Stores user votes
 const mongoUrl = process.env.MONGO_URL;
 const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(64).toString('hex');  // Use generated secret if not set
 
-console.log('MONGO_URL:', mongoUrl);  // Debugging line
-console.log('SESSION_SECRET:', sessionSecret);  // Debugging line
-
 const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(session({
@@ -41,8 +38,8 @@ wss.on('connection', (ws, req) => {
         userVotes[userId] = null;  // No vote initially
     }
 
-    // Send the current counts to the new client
-    ws.send(JSON.stringify({ teaCount, coffeeCount }));
+    // Send the current counts and user vote to the new client
+    ws.send(JSON.stringify({ teaCount, coffeeCount, userVote: userVotes[userId] }));
 
     ws.on('message', message => {
         const data = JSON.parse(message);
@@ -63,15 +60,12 @@ wss.on('connection', (ws, req) => {
             }
             userVotes[userId] = data.item;
 
-            // Broadcast the updated counts to all clients
+            // Broadcast the updated counts and user vote to all clients
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: userVotes[userId] }));
                 }
             });
-
-            // Send the user vote to the specific client
-            ws.send(JSON.stringify({ userVote: userVotes[userId] }));
         } else if (data.type === 'reset') {
             teaCount = 0;
             coffeeCount = 0;
@@ -80,7 +74,7 @@ wss.on('connection', (ws, req) => {
             });
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ teaCount, coffeeCount }));
+                    client.send(JSON.stringify({ teaCount, coffeeCount, userVote: null }));
                 }
             });
         }
